@@ -6,10 +6,11 @@
         protected $_currentY ; // (int) Coordonnée Y sur la carte
         protected $_currentAngle ; // (int) Angle de vue
         protected $_currentCompass; // (string) Classe spécifiant l'orientation de la boussole
+        protected $_mapId ; // (int) l’identifiant de la position courante sur la carte
         protected $_mapStatus; // (int) Statut de la carte
         protected $dbh ; // (object) La connexion à la base de données
 
-        public function __construct() {
+        public function __construct() { // constructeur établissant les valeurs de départ du personnage, et établissant l'accès à la bdd
             $this->dbh = new Database();
             $this->_currentX = 0;
             $this->_currentY = 1;
@@ -18,41 +19,40 @@
             $this->_currentCompass = 'east';
         }
 
-        public function setCurrentX(int $_currentX) { 
+        public function setCurrentX(int $_currentX) { // met à jour la position X
             $this->_currentX = $_currentX;
         }
 
-        public function getCurrentX() {
+        public function getCurrentX() { // permet d'afficher la position X
             return $this->_currentX;
         }
 
-        public function setCurrentY(int $_currentY) {
+        public function setCurrentY(int $_currentY) { // met à jour la position Y
             $this->_currentY = $_currentY;
         }
 
-        public function getCurrentY() {
+        public function getCurrentY() { // permet d'afficher la position Y
             return $this->_currentY;
         }
 
-        public function setCurrentAngle(int $_currentAngle) {
+        public function setCurrentAngle(int $_currentAngle) { // met à jour l'angle de vue
             $this->_currentAngle = $_currentAngle;
             return $_currentAngle;
         }
 
-        public function getCurrentAngle() {
+        public function getCurrentAngle() { // permet d'afficher l'angle de vue
             return $this->_currentAngle;
         }
 
-        public function setMapStatus(int $_mapStatus) {
-            $this->_mapStatus = $_mapStatus;
-            return $_mapStatus;
-        }
-
         private function _checkMove(int $newX, int $newY, int $_currentAngle) { //vérifie la possibilité de déplacement vers une position cible
-                       
-            $stmt = $this->dbh->prepare("SELECT id FROM map WHERE coordx = $newX AND coordy = $newY AND direction = $_currentAngle");
-            $stmt->execute();
-            $result = $stmt->fetchAll();
+            $sql = "SELECT id FROM map WHERE coordx=:coordx AND coordy=:coordy AND direction=:direction";
+            $query = $this->dbh->prepare($sql);
+            $query->bindParam(':coordx', $newX, PDO::PARAM_INT);
+            $query->bindParam(':coordy', $newY, PDO::PARAM_INT);
+            $query->bindParam(':direction', $_currentAngle, PDO::PARAM_INT);
+            $query->execute();
+            $result = $query->fetchAll();
+
             if(!empty($result)){
                 return TRUE;
             } else {
@@ -300,7 +300,7 @@
             }
         }
 
-        public function getMapId() { // Renvoie l'id de map correspondant aux coordonnées
+        public function getMapId() { // Renvoie l'id de map correspondant aux coordonnées X, Y et Angle
 
             $_currentX = $this->_currentX;
             $_currentY = $this->_currentY;
@@ -320,17 +320,27 @@
             return $this->_mapId = $_mapId;
         }
 
-        public function getMapStatus() { // Renvoie le statut de la map correspondant à son id
-            $_mapId = $this->getMapId();
-            $sql5 = "SELECT * FROM action WHERE map_id = :mapId";
-            $stmt5 = $this->dbh->prepare($sql5);
-            $stmt5->bindParam(':mapId', $_mapId, PDO::PARAM_INT);
-            $stmt5->execute();
-            $status = $stmt5->fetch();
+        public function setMapStatus(int $_mapStatus) { // met à jour le statut de la map
+            $this->_mapStatus = $_mapStatus;
+            return $_mapStatus;
+        }
 
-            if ($status) {
-                $_mapStatus = $status['status'];
+        public function getMapStatus() { // Permet de renvoyer le statut de la map dans les recherches d'images et de texte en fonction du statut des actions possédant le même map_id
+            $_mapId = $this->getMapId();
+
+            // renvoie un résultat si un id de map est le même que le map_id d'une action
+            $sql = "SELECT * FROM action WHERE map_id = :mapId";
+            $query = $this->dbh->prepare($sql);
+            $query->bindParam(':mapId', $_mapId, PDO::PARAM_INT);
+            $query->execute();
+            $result = $query->fetch();
+
+            // si un résultat est trouvé
+            if ($result) {
+                // le statut de la map correspond à présent au statut de l'action (zéro si l'action n'a pas été faite, 1 si l'action a été faite)
+                $_mapStatus = $result['status'];
             } else {
+                // si un résultat n'est pas trouvé (pas d'action possible), le statut de la map sera égal à zéro
                 $_mapStatus = 0;
             }
 

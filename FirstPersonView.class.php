@@ -1,13 +1,7 @@
 <?php
     class FirstPersonView extends BaseClass {
 
-        protected $_mapId ; // (int) l’identifiant de la position courante sur la carte
-
-        public function getView(BaseClass $perso) { // Renvoie le chemin vers le fichier .jpg à afficher
-            
-            $_currentX = $perso->_currentX;
-            $_currentY = $perso->_currentY;
-            $_currentAngle = $perso->_currentAngle;
+        public function getView(BaseClass $perso) { // Renvoie le chemin vers le fichier .jpg à afficher, selon l'id de map et son statut
             $_mapId = $perso->getMapId();
             $_mapStatus = $perso->getMapStatus();
 
@@ -16,12 +10,12 @@
             $query->bindParam(':mapId', $_mapId, PDO::PARAM_INT);
             $query->bindParam(':status', $_mapStatus, PDO::PARAM_INT);
             $query->execute();
-            $view = $query->fetch();
+            $result = $query->fetch();
             
-            return $view['path'];
+            return $result['path'];
         }
 
-        public function getAnimCompass(BaseClass $perso) { // Renvoie la direction vers laquelle pointe la boussole (via une classe CSS)
+        public function getAnimCompass(BaseClass $perso) { // Renvoie la direction vers laquelle pointe la boussole (via des classes CSS)
             switch ($perso->_currentAngle) {
                 case 0 :
                     $perso->_currentCompass = 'east';

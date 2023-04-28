@@ -1,33 +1,26 @@
 <?php
     class FirstPersonText extends BaseClass {
 
-        public function getText(BaseClass $perso) { // Renvoie le texte à afficher
-            
-            $_currentX = $perso->_currentX;
-            $_currentY = $perso->_currentY;
-            $_currentAngle = $perso->_currentAngle;
+        public function getText(BaseClass $perso) { // Renvoie le texte à afficher selon l'id de map et son statut
+            $_mapId = $perso->getMapId();
             $_mapStatus = $perso->getMapStatus();
+
+            $sql = "SELECT * FROM text WHERE map_id = :mapId AND status_action=:status";
+            $query = $this->dbh->prepare($sql);
+            $query->bindParam(':mapId', $_mapId, PDO::PARAM_INT);
+            $query->bindParam(':status', $_mapStatus, PDO::PARAM_INT);
+            $query->execute();
+            $result = $query->fetch();
             
-            $sql2 = "SELECT *
-                     FROM text
-                     JOIN map
-                     ON text.map_id = map.id
-                     WHERE coordx=:coordx AND coordy=:coordy AND direction=:direction AND text.status_action=:status";
-            $stmt2 = $this->dbh->prepare($sql2);
-            $stmt2->bindParam(':coordx', $_currentX, PDO::PARAM_INT);
-            $stmt2->bindParam(':coordy', $_currentY, PDO::PARAM_INT);
-            $stmt2->bindParam(':direction', $_currentAngle, PDO::PARAM_INT);
-            $stmt2->bindParam(':status', $_mapStatus, PDO::PARAM_INT);
-            $stmt2->execute();
-            $text = $stmt2->fetch();
-            
-            if ($text) {
-                $result = $text['text'];
+            // si un résultat est trouvé, le texte correspond à celui de la table texte qui ressort de la recherche
+            if ($result) {
+                $text = $result['text'];
             } else {
-                $result = "Voyons-voir par ici...";
+                // sinon le texte affiché sera :
+                $text = "Voyons-voir par ici...";
             }
             
-            return $result;
+            return $text;
         }
 
     }
