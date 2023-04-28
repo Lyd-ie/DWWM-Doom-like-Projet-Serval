@@ -118,23 +118,26 @@
             $newX = $this->_currentX;
             $newY = $this->_currentY;
             switch($this->_currentAngle){
-                case 0 : {
+                case 0 :
                     $newY--;
                     break;
-                }
-                case 90 : {
+
+                case 90 :
                     $newX++;
                     break;
-                }
-                case 180 : {
+
+                case 180 :
                     $newY++;
                     break;
-                }
-                case 270 : {
+
+                case 270 :
                     $newX--;
                     break;
-                }
+
+                default :
+                    break;
             }
+
             return $this->_checkMove($newX, $newY, $this->_currentAngle);
         }
 
@@ -142,22 +145,25 @@
             $newX = $this->_currentX;
             $newY = $this->_currentY;
             switch($this->_currentAngle){
-                case 0 : {
+                case 0 :
                     $newY++;
                     break;
-                }
-                case 90 : {
+
+                case 90 :
                     $newX--;
                     break;
-                }
-                case 180 : {
+
+                case 180 :
                     $newY--;
                     break;
-                }
-                case 270 : {
+
+                case 270 :
                     $newX++;
                     break;
-                }
+                
+                default :
+                    break;
+    
             }
             return $this->_checkMove($newX, $newY, $this->_currentAngle);
         }
