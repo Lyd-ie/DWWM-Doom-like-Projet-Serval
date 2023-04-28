@@ -1,0 +1,128 @@
+body {
+    font-family: calibri;
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size: 1vw;
+    background-color: black;
+    background-image: url(./assets/1025035.jpg);
+    background-position: top;
+    background-size: cover;
+}
+
+input {
+    color: black;
+    font-size:  0.8vw;
+}
+
+.absolute {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.overlay {
+    background-color: rgba(0, 0, 0, 0.534);
+}
+.game {
+    width: 40%;
+    margin: 3% auto;
+    border: 2px solid #82b210;
+}
+
+.view {
+    width: 100%;
+    margin: 0px;
+}
+
+.row {
+    margin: 0px;
+    display: flex;
+    flex-direction: row;
+    background-color: #384430;
+}
+
+.left {
+    padding: 2%;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.directions {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10%;
+    border-radius: 30px;
+}
+
+table {
+    width: 100%;
+    margin: 0 auto;
+}
+
+table td {
+    padding: 2%;
+}
+
+table input[type='submit'] {
+    padding: 15% 25%;
+}
+
+.right {
+    width: 80%;
+    margin: 0 5%;
+}
+
+.text {
+    padding: 5%;
+    height: 25%;
+    border-radius: 30px;
+}
+
+.inventory {
+    margin-top : 20%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+span {
+    font-weight: bold;
+}
+
+.compass {
+    margin-top: 10%;
+}
+
+.east {
+    transform: rotate(0);
+}
+
+.south {
+    transform: rotate(270deg);
+}
+
+.west {
+    transform: rotate(180deg);
+}
+
+.north {
+    transform: rotate(90deg);
+}
+
+.EtoN {
+    animation: rotateEtoN 2s;
+}
+
+@keyframes rotateEtoN {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(90deg);
+    }
+  }
