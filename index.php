@@ -1,5 +1,11 @@
 <?php
 
+    // // Empêche les erreurs de s'afficher à l'écran, mais toujours dans error_log
+    ini_set('display_errors','Off');
+    ini_set('error_reporting', E_ALL );
+    define('WP_DEBUG', false);
+    define('WP_DEBUG_DISPLAY', false);
+
     session_start(); // variable $_SESSION
 
     // autoload des différentes classes
