@@ -28,7 +28,7 @@
         $toto->setMapStatus($_POST['mapStatus']);
     }
 
-    //les différents $_POST activant les mouvements et actions de $toto
+    // les différents $_POST activant les mouvements et actions de $toto
     if (isset($_POST['turnLeft'])) {
         $toto->turnLeft();
     }
